@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>EasyMat — מורה מתמטיקה AI לבגרות</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue: #2563eb;
+      --blue-light: #3b82f6;
+      --blue-dark: #1d4ed8;
+      --bg: #f8fafc;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-200: #e2e8f0;
+      --gray-500: #64748b;
+      --gray-700: #334155;
+      --gray-900: #0f172a;
+    }
+
+    body {
+      font-family: 'Heebo', sans-serif;
+      background: var(--bg);
+      color: var(--gray-900);
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo { font-size: 1.3rem; font-weight: 800; color: var(--blue); }
+    .nav-links { display: flex; gap: 1.5rem; }
+    .nav-links a { text-decoration: none; color: var(--gray-700); font-size: 0.95rem; font-weight: 500; transition: color .2s; }
+    .nav-links a:hover { color: var(--blue); }
+    .nav-cta {
+      background: var(--blue);
+      color: white !important;
+      padding: 0.4rem 1.1rem;
+      border-radius: 8px;
+      transition: background .2s !important;
+    }
+    .nav-cta:hover { background: var(--blue-dark) !important; color: white !important; }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #3b82f6 100%);
+      color: white;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 100px;
+      padding: 0.3rem 1rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 1.5rem;
+    }
+    .hero h1 { font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; margin-bottom: 1rem; line-height: 1.2; }
+    .hero h1 span { color: #93c5fd; }
+    .hero p { font-size: 1.15rem; color: rgba(255,255,255,0.85); max-width: 600px; margin: 0 auto 2.5rem; }
+    .hero-buttons { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: white;
+      color: var(--blue-dark);
+      padding: 0.75rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1rem;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.2); }
+    .btn-secondary {
+      background: rgba(255,255,255,0.15);
+      color: white;
+      padding: 0.75rem 2rem;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 1rem;
+      border: 1px solid rgba(255,255,255,0.4);
+      transition: background .2s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.25); }
+
+    /* CHAT MOCKUP */
+    .mockup-section {
+      padding: 4rem 2rem;
+      background: var(--gray-100);
+    }
+    .mockup-wrap {
+      max-width: 700px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.12);
+      overflow: hidden;
+      border: 1px solid var(--gray-200);
+    }
+    .mockup-header {
+      background: var(--blue);
+      padding: 1rem 1.5rem;
+      color: white;
+      text-align: center;
+    }
+    .mockup-header h3 { font-size: 1.1rem; font-weight: 700; }
+    .mockup-header p { font-size: 0.8rem; opacity: 0.8; }
+    .unit-bar {
+      display: flex;
+      gap: 0.5rem;
+      padding: 0.8rem 1.5rem;
+      border-bottom: 1px solid var(--gray-100);
+      background: var(--gray-50);
+      align-items: center;
+      direction: rtl;
+    }
+    .unit-label { font-size: 0.8rem; color: var(--gray-500); }
+    .unit-btn {
+      padding: 0.25rem 0.75rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--gray-200);
+      background: white;
+      color: var(--gray-700);
+      cursor: default;
+    }
+    .unit-btn.active {
+      background: var(--blue);
+      color: white;
+      border-color: var(--blue);
+    }
+    .chat-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; direction: rtl; }
+    .msg { display: flex; }
+    .msg.user { justify-content: flex-start; }
+    .msg.bot { justify-content: flex-end; }
+    .bubble {
+      max-width: 80%;
+      padding: 0.75rem 1rem;
+      border-radius: 16px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+    .msg.user .bubble {
+      background: var(--blue);
+      color: white;
+      border-bottom-right-radius: 4px;
+    }
+    .msg.bot .bubble {
+      background: var(--gray-100);
+      color: var(--gray-900);
+      border-bottom-left-radius: 4px;
+      border: 1px solid var(--gray-200);
+    }
+    .formula {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      margin: 0.4rem 0;
+      font-family: 'Courier New', monospace;
+      font-size: 1rem;
+      text-align: center;
+      color: var(--blue-dark);
+    }
+    .chat-input-bar {
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--gray-200);
+      display: flex;
+      gap: 0.5rem;
+      direction: rtl;
+    }
+    .fake-input {
+      flex: 1;
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 0.6rem 1rem;
+      font-size: 0.9rem;
+      color: var(--gray-500);
+      background: var(--gray-50);
+    }
+    .fake-send {
+      background: var(--blue);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 0.6rem 1.1rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: default;
+    }
+
+    /* FEATURES */
+    .features { padding: 5rem 2rem; text-align: center; }
+    .section-tag {
+      display: inline-block;
+      background: #dbeafe;
+      color: var(--blue-dark);
+      padding: 0.3rem 0.9rem;
+      border-radius: 100px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+    .section-title { font-size: clamp(1.6rem, 3vw, 2.2rem); font-weight: 800; margin-bottom: 0.75rem; }
+    .section-sub { color: var(--gray-500); font-size: 1rem; max-width: 520px; margin: 0 auto 3rem; }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .feature-card {
+      background: white;
+      border: 1px solid var(--gray-200);
+      border-radius: 16px;
+      padding: 1.75rem;
+      text-align: right;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .feature-card:hover { box-shadow: 0 8px 30px rgba(0,0,0,0.08); transform: translateY(-3px); }
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: #dbeafe;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      margin-right: auto;
+    }
+    .feature-card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; }
+    .feature-card p { font-size: 0.875rem; color: var(--gray-500); line-height: 1.5; }
+
+    /* STACK */
+    .stack { background: var(--gray-900); color: white; padding: 4rem 2rem; text-align: center; }
+    .stack .section-title { color: white; }
+    .stack .section-sub { color: #94a3b8; }
+    .stack-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    .pill {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: white;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* HOW */
+    .how { padding: 5rem 2rem; text-align: center; }
+    .steps { display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap; max-width: 900px; margin: 0 auto; }
+    .step { flex: 1; min-width: 200px; max-width: 260px; }
+    .step-num {
+      width: 48px;
+      height: 48px;
+      background: var(--blue);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin: 0 auto 1rem;
+    }
+    .step h3 { font-weight: 700; margin-bottom: 0.3rem; }
+    .step p { font-size: 0.875rem; color: var(--gray-500); }
+
+    /* CTA */
+    .cta {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: white;
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+    .cta h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800; margin-bottom: 1rem; }
+    .cta p { color: rgba(255,255,255,0.8); margin-bottom: 2rem; font-size: 1rem; }
+
+    /* FOOTER */
+    footer {
+      background: var(--gray-900);
+      color: #94a3b8;
+      text-align: center;
+      padding: 2rem;
+      font-size: 0.875rem;
+    }
+    footer a { color: #60a5fa; text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">EasyMat ✦</div>
+  <div class="nav-links">
+    <a href="#features">פיצ'רים</a>
+    <a href="#how">איך זה עובד</a>
+    <a href="https://github.com/SaharHalili95/easymat" target="_blank" rel="noopener" class="nav-cta">GitHub</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🤖 מופעל על ידי Claude AI + RAG</div>
+  <h1>מורה מתמטיקה AI<br /><span>לבגרות הישראלית</span></h1>
+  <p>שאל שאלה, קבל פתרון מלא עם נוסחאות — מותאם ל-3, 4 ו-5 יחידות. עברית ואנגלית.</p>
+  <div class="hero-buttons">
+    <a href="https://github.com/SaharHalili95/easymat" target="_blank" rel="noopener" class="btn-primary">צפה בקוד</a>
+    <a href="#features" class="btn-secondary">גלה עוד</a>
+  </div>
+</section>
+
+<!-- CHAT MOCKUP -->
+<section class="mockup-section">
+  <div class="mockup-wrap">
+    <div class="mockup-header">
+      <h3>EasyMat AI</h3>
+      <p>מורה מתמטיקה לבגרות | 3, 4, 5 יחידות</p>
+    </div>
+    <div class="unit-bar">
+      <span class="unit-label">רמת יחידות:</span>
+      <span class="unit-btn">3 יחידות</span>
+      <span class="unit-btn active">4 יחידות</span>
+      <span class="unit-btn">5 יחידות</span>
+    </div>
+    <div class="chat-body">
+      <div class="msg user">
+        <div class="bubble">מה הנגזרת של x³ + 2x?</div>
+      </div>
+      <div class="msg bot">
+        <div class="bubble">
+          נגזור כל איבר בנפרד לפי כלל הנגזרת:<br /><br />
+          כלל: הנגזרת של xⁿ היא n·xⁿ⁻¹
+          <div class="formula">f(x) = x³ + 2x</div>
+          <div class="formula">f′(x) = 3x² + 2</div>
+          האיבר הראשון x³ נגזר ל-3x², והאיבר 2x נגזר ל-2. ✓
+        </div>
+      </div>
+      <div class="msg user">
+        <div class="bubble">תסביר לי מתי הנגזרת שווה אפס</div>
+      </div>
+      <div class="msg bot">
+        <div class="bubble">
+          נגזרת שווה אפס כשהפונקציה במקסימום, מינימום, או נקודת פיתול אופקית — כלומר ב"נקודות קריטיות".<br /><br />
+          עבור f′(x) = 3x² + 2:
+          <div class="formula">3x² + 2 = 0 ⟹ x² = -2/3</div>
+          אין פתרון ממשי, כלומר לפונקציה זו אין נקודות קריטיות.
+        </div>
+      </div>
+    </div>
+    <div class="chat-input-bar">
+      <span class="fake-input">שאל שאלת מתמטיקה... / Ask a math question...</span>
+      <button class="fake-send">שלח</button>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-tag">פיצ'רים</div>
+  <h2 class="section-title">כל מה שצריך לבגרות</h2>
+  <p class="section-sub">מורה שמכיר את החומר, עונה בעברית, ומסביר צעד אחר צעד.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>RAG על חומר הלימוד</h3>
+      <p>מחפש בחומר הבגרות האמיתי לפני כל תשובה — לא מנחש, מוצא.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📐</div>
+      <h3>נוסחאות LaTeX</h3>
+      <p>כל נוסחה מתרנדרת כמו בספר לימוד. לא טקסט רגיל — מתמטיקה אמיתית.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📷</div>
+      <h3>העלאת תמונה</h3>
+      <p>צילמת שאלה בכתב יד? שלח ו-AI יתמלל, יפרש ויפתור.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎯</div>
+      <h3>3 / 4 / 5 יחידות</h3>
+      <p>בוחר את רמת הבגרות שלך — הסגנון, הטון והחומר מותאמים אוטומטית.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌐</div>
+      <h3>עברית ואנגלית</h3>
+      <p>כותב בעברית — עונה בעברית. כותב באנגלית — עונה באנגלית.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>סטרימינג בזמן אמת</h3>
+      <p>התשובה מגיעה מילה מילה, בלי להמתין לכל הפלט.</p>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section class="stack">
+  <div class="section-tag" style="background:rgba(255,255,255,0.1);color:#93c5fd;">טכנולוגיה</div>
+  <h2 class="section-title">Stack</h2>
+  <p class="section-sub" style="color:#94a3b8;">בנוי על הכלים הטובים ביותר שיש.</p>
+  <div class="stack-pills">
+    <span class="pill">Next.js 14</span>
+    <span class="pill">TypeScript</span>
+    <span class="pill">Claude API</span>
+    <span class="pill">Pinecone</span>
+    <span class="pill">Voyage AI</span>
+    <span class="pill">KaTeX</span>
+    <span class="pill">Tailwind CSS</span>
+    <span class="pill">RAG Architecture</span>
+    <span class="pill">Streaming</span>
+    <span class="pill">Prompt Caching</span>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="section-tag">איך זה עובד</div>
+  <h2 class="section-title">3 שלבים פשוטים</h2>
+  <p class="section-sub">מהשאלה שלך לתשובה מדויקת תוך שניות.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h3>בחר יחידות</h3>
+      <p>בחר 3, 4 או 5 יחידות ו-AI יתאים את עצמו לרמה שלך.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h3>שאל שאלה</h3>
+      <p>כתוב שאלה בטקסט, או העלה תמונה של שאלה בכתב יד.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h3>קבל פתרון</h3>
+      <p>Claude מחפש בחומר הלימוד ומסביר צעד אחר צעד עם נוסחאות.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>מוכן לראות את הקוד?</h2>
+  <p>הפרויקט פתוח לגמרי — Next.js, Claude API, Pinecone, RAG מלא.</p>
+  <a href="https://github.com/SaharHalili95/easymat" target="_blank" rel="noopener" class="btn-primary">
+    GitHub Repository
+  </a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>בנוי על ידי <a href="https://saharhalili95.github.io/html-portfolio/" target="_blank" rel="noopener">Sahar Halili</a> &nbsp;·&nbsp; <a href="https://github.com/SaharHalili95/easymat" target="_blank" rel="noopener">GitHub</a></p>
+</footer>
+
+</body>
+</html>
