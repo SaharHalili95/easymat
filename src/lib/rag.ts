@@ -6,6 +6,10 @@ export interface NoteChunk {
   text: string;
   topic: string;
   units: number[];
+  type?: string;
+  year?: string;
+  moed?: string;
+  shalon?: string;
 }
 
 export async function retrieveContext(
@@ -28,10 +32,14 @@ export async function retrieveContext(
     includeMetadata: true,
   });
 
-return results.matches.map((match) => ({
+  return results.matches.map((match) => ({
     id: match.id,
     text: (match.metadata?.text as string) ?? '',
     topic: (match.metadata?.topic as string) ?? '',
     units: (match.metadata?.units as unknown as number[]) ?? [],
+    type: (match.metadata?.type as string) ?? undefined,
+    year: (match.metadata?.year as string) ?? undefined,
+    moed: (match.metadata?.moed as string) ?? undefined,
+    shalon: (match.metadata?.shalon as string) ?? undefined,
   }));
 }

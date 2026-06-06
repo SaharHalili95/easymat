@@ -6,7 +6,7 @@ export async function embedText(text: string): Promise<number[]> {
 // Batch embed with rate-limit awareness.
 // Free tier: 3 RPM + 10K TPM. Splits into chunks of BATCH_SIZE with a
 // 22s gap between calls so we stay inside both limits.
-const BATCH_SIZE = 20;
+const BATCH_SIZE = 2;
 
 export async function embedBatch(texts: string[]): Promise<number[][]> {
   if (texts.length <= BATCH_SIZE) {
@@ -16,7 +16,7 @@ export async function embedBatch(texts: string[]): Promise<number[][]> {
   const results: number[][] = [];
   for (let i = 0; i < texts.length; i += BATCH_SIZE) {
     if (i > 0) {
-      await new Promise(r => setTimeout(r, 22_000));
+      await new Promise(r => setTimeout(r, 30_000));
     }
     const chunk = texts.slice(i, i + BATCH_SIZE);
     const embeddings = await embedSingleBatch(chunk);

@@ -51,7 +51,7 @@ export function ChatMessage({ role, content }: Props) {
         ) : (
           <ReactMarkdown
             components={{
-              p: ({ children }) => <p className="mb-2 last:mb-0">{renderSegmentChildren(children)}</p>,
+              p: ({ children }) => <div className="mb-2 last:mb-0">{renderSegmentChildren(children)}</div>,
               h1: ({ children }) => <h1 className="text-base font-bold mb-2">{children}</h1>,
               h2: ({ children }) => <h2 className="text-sm font-bold mb-1 mt-2">{children}</h2>,
               h3: ({ children }) => <h3 className="text-sm font-semibold mb-1 mt-2">{children}</h3>,

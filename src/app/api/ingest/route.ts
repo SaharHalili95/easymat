@@ -52,6 +52,10 @@ export async function POST(req: NextRequest) {
       units: (frontmatter.units as number[]).map(String),
       tags: frontmatter.tags as string[],
       source: file,
+      ...(frontmatter.type ? { type: frontmatter.type as string } : {}),
+      ...(frontmatter.year ? { year: String(frontmatter.year) } : {}),
+      ...(frontmatter.moed ? { moed: frontmatter.moed as string } : {}),
+      ...(frontmatter.shalon ? { shalon: String(frontmatter.shalon) } : {}),
     },
   })) as unknown as PineconeRecord<RecordMetadata>[];
 
@@ -68,22 +72,58 @@ export async function POST(req: NextRequest) {
   });
 }
 
-// Split on paragraph boundaries, keeping $$ blocks intact
+const MAX_CHUNK_CHARS = 1500;
+const MIN_CHUNK_CHARS = 200;
+
+// Primary split on --- (question boundaries), then paragraphs.
+// Hierarchical: sub-chunks carry their section heading for RAG context.
 function chunkText(text: string): string[] {
-  const paragraphs = text.split(/\n{2,}/);
+  const sections = text.split(/\n---+\n/);
+  const result: string[] = [];
+  for (const section of sections) {
+    result.push(...chunkSection(section.trim()));
+  }
+  return result.filter(c => c.trim().length >= MIN_CHUNK_CHARS);
+}
+
+function chunkSection(section: string): string[] {
+  if (!section) return [];
+
+  // Extract heading (## or ###) to prepend on sub-chunks
+  const headingMatch = section.match(/^(#{1,3} .+)$/m);
+  const heading = headingMatch?.[1] ?? '';
+
+  // If section fits and LaTeX is balanced, keep whole
+  if (section.length <= MAX_CHUNK_CHARS && isLatexBalanced(section)) {
+    return [section];
+  }
+
+  // Split on paragraph breaks, accumulate up to MAX_CHUNK_CHARS
+  const paragraphs = section.split(/\n{2,}/);
   const chunks: string[] = [];
   let current = '';
 
   for (const para of paragraphs) {
-    const candidate = current ? current + '\n\n' + para : para;
-    const openCount = (candidate.match(/\$\$/g) ?? []).length;
-    if (openCount % 2 === 0) {
-      chunks.push(candidate);
-      current = '';
+    const candidate = current ? `${current}\n\n${para}` : para;
+    const latexOpen = !isLatexBalanced(candidate);
+
+    if (!latexOpen && current && candidate.length > MAX_CHUNK_CHARS) {
+      chunks.push(prependHeading(current, heading));
+      current = para;
     } else {
       current = candidate;
     }
   }
-  if (current) chunks.push(current);
-  return chunks.filter(c => c.trim().length > 0);
+  if (current) chunks.push(prependHeading(current, heading));
+
+  return chunks;
+}
+
+function isLatexBalanced(text: string): boolean {
+  return ((text.match(/\$\$/g) ?? []).length % 2 === 0);
+}
+
+function prependHeading(chunk: string, heading: string): string {
+  if (!heading || chunk.trimStart().startsWith(heading)) return chunk;
+  return `${heading}\n\n${chunk}`;
 }
