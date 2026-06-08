@@ -1,11 +1,21 @@
 'use client';
+import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { InlineMath, BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
 
+interface BagrutQuestion {
+  text: string;
+  year: string;
+  moed: string;
+  shalon: string;
+  source: string;
+}
+
 interface Props {
   role: 'user' | 'assistant';
   content: string;
+  bagrutQuestion?: BagrutQuestion;
 }
 
 function looksLikeLatex(s: string): boolean {
@@ -34,8 +44,20 @@ function renderSegment(text: string) {
   });
 }
 
-export function ChatMessage({ role, content }: Props) {
+function buildMoedUrl(q: BagrutQuestion): string {
+  const month = q.moed === 'א' ? 6 : 8;
+  const codeMap: Record<string, string> = {
+    '581': '35581', '582': '35582',
+    '481': '16481', '381': '20381',
+  };
+  const code = codeMap[q.shalon] ?? q.shalon;
+  return `https://meyda.education.gov.il/sheeloney_bagrut/${q.year}/${month}/HEB/${code}.pdf`;
+}
+
+export function ChatMessage({ role, content, bagrutQuestion }: Props) {
   const isUser = role === 'user';
+  const [bqOpen, setBqOpen] = useState(false);
+
   return (
     <div className={`flex ${isUser ? 'justify-end' : 'justify-start'} mb-4`}>
       <div
@@ -73,6 +95,36 @@ export function ChatMessage({ role, content }: Props) {
           >
             {content}
           </ReactMarkdown>
+        )}
+
+        {!isUser && bagrutQuestion && (
+          <div className="mt-3 border-t border-gray-200 pt-2">
+            <button
+              onClick={() => setBqOpen((o) => !o)}
+              className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium"
+            >
+              <span>{bqOpen ? '▲' : '▼'}</span>
+              שאלה מבגרות אמיתית לדוגמה
+            </button>
+            {bqOpen && (
+              <div className="mt-2 text-xs text-gray-700 bg-white border border-gray-200 rounded-lg p-3">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="font-semibold text-blue-700">
+                    בגרות {bagrutQuestion.year} מועד {bagrutQuestion.moed} — שאלון {bagrutQuestion.shalon}
+                  </span>
+                  <a
+                    href={buildMoedUrl(bagrutQuestion)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-gray-400 hover:text-gray-600 text-[10px] underline"
+                  >
+                    © משרד החינוך
+                  </a>
+                </div>
+                <p dir="rtl" className="leading-relaxed whitespace-pre-wrap">{bagrutQuestion.text.slice(0, 600)}{bagrutQuestion.text.length > 600 ? '...' : ''}</p>
+              </div>
+            )}
+          </div>
         )}
       </div>
     </div>

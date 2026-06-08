@@ -4,10 +4,19 @@ import { ChatMessage } from '@/components/ChatMessage';
 import { ChatInput } from '@/components/ChatInput';
 import { UnitSelector } from '@/components/UnitSelector';
 
+interface BagrutQuestion {
+  text: string;
+  year: string;
+  moed: string;
+  shalon: string;
+  source: string;
+}
+
 interface Message {
   id: string;
   role: 'user' | 'assistant';
   content: string;
+  bagrutQuestion?: BagrutQuestion;
 }
 
 export default function Home() {
@@ -40,12 +49,19 @@ export default function Home() {
       if (!res.ok) throw new Error(`API error: ${res.status}`);
 
       if (!res.body) throw new Error('No response body');
+
+      let bagrutQuestion: BagrutQuestion | undefined;
+      const bqHeader = res.headers.get('X-Bagrut-Question');
+      if (bqHeader) {
+        try { bagrutQuestion = JSON.parse(decodeURIComponent(bqHeader)); } catch {}
+      }
+
       const reader = res.body.getReader();
       const decoder = new TextDecoder();
       let assistantText = '';
 
       const assistantId = crypto.randomUUID();
-      setMessages((prev) => [...prev, { id: assistantId, role: 'assistant', content: '' }]);
+      setMessages((prev) => [...prev, { id: assistantId, role: 'assistant', content: '', bagrutQuestion }]);
 
       while (true) {
         const { done, value } = await reader.read();
@@ -71,7 +87,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen max-w-2xl mx-auto shadow-lg">
       <header className="p-4 border-b text-center bg-white">
-        <h1 className="text-xl font-bold text-blue-700">Bagrut-Master AI</h1>
+        <h1 className="text-xl font-bold text-blue-700">בגרות מאסטר</h1>
         <p className="text-xs text-gray-500 mt-0.5">מורה מתמטיקה לבגרות | 3, 4, 5 יחידות</p>
       </header>
 
@@ -84,7 +100,7 @@ export default function Home() {
           </p>
         )}
         {messages.map((m) => (
-          <ChatMessage key={m.id} role={m.role} content={m.content} />
+          <ChatMessage key={m.id} role={m.role} content={m.content} bagrutQuestion={m.bagrutQuestion} />
         ))}
         {loading && messages[messages.length - 1]?.role !== 'assistant' && (
           <div className="text-center text-gray-400 text-sm">חושב...</div>

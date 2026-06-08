@@ -1,4 +1,17 @@
+import fs from 'fs';
+import path from 'path';
 import { NoteChunk } from './rag';
+
+function loadSyllabus(unitLevel: number): string {
+  try {
+    const filePath = path.join(process.cwd(), 'src/data/syllabus', `mikud-2024-${unitLevel}units.md`);
+    const content = fs.readFileSync(filePath, 'utf8');
+    // Strip frontmatter
+    return content.replace(/^---[\s\S]*?---\n/, '').trim();
+  } catch {
+    return '';
+  }
+}
 
 export function buildSystemPrompt(context: NoteChunk[], unitLevel?: number): string {
   const contextBlock = context.length > 0
@@ -14,9 +27,13 @@ export function buildSystemPrompt(context: NoteChunk[], unitLevel?: number): str
     ? `The student is studying for the ${unitLevel}-unit Bagrut exam.`
     : 'The student has not specified their unit level yet.';
 
-  return `You are the "Bagrut-Master AI," a specialized math tutor for the Israeli High School Matriculation (Bagrut) for 3, 4, and 5 units.
+  const syllabus = unitLevel ? loadSyllabus(unitLevel) : '';
+
+  return `You are "בגרות מאסטר" (Bagrut Master), a specialized math tutor for the Israeli High School Matriculation (Bagrut) for 3, 4, and 5 units.
 
 ${unitContext}
+
+${syllabus ? `[SYLLABUS — מיקוד תשפ"ד]\n${syllabus}\n[/SYLLABUS]` : ''}
 
 ${contextBlock ? `[CONTEXT]\n${contextBlock}\n[/CONTEXT]` : '[CONTEXT]\n[/CONTEXT]'}
 

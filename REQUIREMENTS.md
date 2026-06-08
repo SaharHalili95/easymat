@@ -1,4 +1,4 @@
-# Bagrut-Master AI — Project Requirements
+# בגרות מאסטר — Project Requirements
 
 ## System Prompt (Official)
 

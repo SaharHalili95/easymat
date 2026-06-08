@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { getAnthropicClient } from '@/lib/claude';
-import { retrieveContext } from '@/lib/rag';
+import { retrieveContext, retrieveBagrutQuestion } from '@/lib/rag';
 import { buildSystemPrompt } from '@/lib/buildSystemPrompt';
 
 // In-memory rate limiter: 20 requests/minute per IP
@@ -81,7 +81,10 @@ export async function POST(req: NextRequest) {
   const lastMessage = messages[messages.length - 1]?.content ?? '';
   const queryText = typeof lastMessage === 'string' ? lastMessage : lastMessage[0]?.text ?? '';
 
-  const context = await retrieveContext(queryText, unitLevel);
+  const [context, bagrutQuestion] = await Promise.all([
+    retrieveContext(queryText, unitLevel),
+    retrieveBagrutQuestion(queryText, unitLevel),
+  ]);
   const systemPrompt = buildSystemPrompt(context, unitLevel);
 
   const userContent: Anthropic.MessageParam['content'] = imageBase64
@@ -93,6 +96,14 @@ export async function POST(req: NextRequest) {
 
   const client = getAnthropicClient();
 
+  const needsSonnet =
+    !!imageBase64 ||
+    /הוכח|הוכיח|הראה|prove|show that/i.test(queryText) ||
+    /מספרים מרוכבים|וקטור|complex number|vector/i.test(queryText) ||
+    context.some(c => c.shalon === '582');
+
+  const model = needsSonnet ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001';
+
   const MAX_HISTORY_CHARS = 40_000;
   const history = trimHistory(
     messages.slice(0, -1) as Anthropic.MessageParam[],
@@ -100,7 +111,7 @@ export async function POST(req: NextRequest) {
   );
 
   const stream = await client.messages.stream({
-    model: 'claude-sonnet-4-6',
+    model,
     max_tokens: 2048,
     system: [
       {
@@ -127,7 +138,12 @@ export async function POST(req: NextRequest) {
     },
   });
 
-  return new Response(readable, {
-    headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-  });
+  const responseHeaders: Record<string, string> = {
+    'Content-Type': 'text/plain; charset=utf-8',
+  };
+  if (bagrutQuestion) {
+    responseHeaders['X-Bagrut-Question'] = encodeURIComponent(JSON.stringify(bagrutQuestion));
+  }
+
+  return new Response(readable, { headers: responseHeaders });
 }
