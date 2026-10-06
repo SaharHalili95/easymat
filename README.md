@@ -1,4 +1,4 @@
-# EasyMat — AI Math Tutor for the Israeli Bagrut
+# Bagrut Master - AI Math Tutor for the Israeli Bagrut
 
 An AI-powered math tutor for Israeli high school students preparing for the Bagrut exam (3, 4, and 5 units). Combines RAG architecture with the Claude API to deliver context-aware, curriculum-aligned answers with full LaTeX rendering.
 
