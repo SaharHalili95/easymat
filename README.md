@@ -70,8 +70,28 @@ src/
     rag.ts                # Vector retrieval
     embed.ts              # Voyage AI embeddings
     buildSystemPrompt.ts  # RAG context + system prompt
+    __tests__/            # Vitest unit tests
   data/notes/             # Markdown knowledge base (Bagrut curriculum)
 ```
+
+## Tests
+
+```bash
+npm test
+```
+
+27 unit tests cover the system prompt (citations, unit level, syllabus), Pinecone retrieval filters and the Voyage AI client (batching, 429 retries, errors). External APIs are mocked, so no keys are needed. CI runs lint, type-check, tests and a production build on every push.
+
+## Design docs
+
+Planning notes written while building the project (mostly in Hebrew):
+
+- [Architecture](docs/ARCHITECTURE.md)
+- [Requirements](docs/REQUIREMENTS.md)
+- [Processes and data flow](docs/PROCESSES.md)
+- [Cost analysis](docs/COST_ANALYSIS.md)
+- [Model capabilities and limits](docs/HAIKU_CAPABILITIES.md)
+- [Original execution plan](docs/PROJECT_PLAN.md)
 
 ## GitHub
 
