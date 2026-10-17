@@ -1,4 +1,4 @@
-# Bagrut-Master AI — Execution Plan
+# EasyMat AI — Execution Plan
 
 **Goal:** Build a full-stack AI math tutor for the Israeli Bagrut exam (3/4/5 units) with RAG
 powered by Obsidian notes + Pinecone, using Next.js and the Claude API.
@@ -37,8 +37,8 @@ powered by Obsidian notes + Pinecone, using Next.js and the Claude API.
 **1.1 — Scaffold Next.js app**
 ```bash
 cd ~/Projects
-npx create-next-app@latest bagrut-master --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
-cd bagrut-master
+npx create-next-app@latest easymat --typescript --tailwind --eslint --app --src-dir --import-alias "@/*"
+cd easymat
 ```
 
 **1.2 — Install dependencies**
@@ -52,7 +52,7 @@ npm install -D @types/katex
 
 **1.3 — Create environment file**
 
-File: `/Projects/bagrut-master/.env.local`
+File: `/Projects/easymat/.env.local`
 ```
 ANTHROPIC_API_KEY=sk-ant-api03-...   # copy from nitai-bot/.env
 PINECONE_API_KEY=your-pinecone-key
@@ -465,7 +465,7 @@ export function buildSystemPrompt(context: NoteChunk[]): string {
     ? context.map(c => `[CONTEXT - ${c.topic}]\n${c.text}`).join('\n\n')
     : '';
 
-  return `You are the "Bagrut-Master AI," a specialized math tutor for the Israeli High School Matriculation (Bagrut) for 3, 4, and 5 units.
+  return `You are the "EasyMat AI," a specialized math tutor for the Israeli High School Matriculation (Bagrut) for 3, 4, and 5 units.
 
 ${contextBlock ? `[CONTEXT]\n${contextBlock}\n[/CONTEXT]` : '[CONTEXT]\n[/CONTEXT]'}
 
@@ -815,7 +815,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen max-w-2xl mx-auto">
       <header className="p-4 border-b text-center">
-        <h1 className="text-xl font-bold text-blue-700">Bagrut-Master AI</h1>
+        <h1 className="text-xl font-bold text-blue-700">EasyMat AI</h1>
         <p className="text-xs text-gray-500">מורה מתמטיקה לבגרות | 3, 4, 5 יחידות</p>
       </header>
 
@@ -922,8 +922,8 @@ Expected: Claude transcribes the equation to LaTeX and confirms with the student
 ```bash
 git init
 git add src package.json tsconfig.json tailwind.config.ts next.config.ts
-git commit -m "feat: initial Bagrut-Master AI implementation"
-gh repo create bagrut-master --public --push
+git commit -m "feat: initial EasyMat AI implementation"
+gh repo create easymat --public --push
 ```
 
 **7.2 — Deploy to Vercel**

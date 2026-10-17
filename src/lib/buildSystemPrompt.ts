@@ -29,7 +29,7 @@ export function buildSystemPrompt(context: NoteChunk[], unitLevel?: number): str
 
   const syllabus = unitLevel ? loadSyllabus(unitLevel) : '';
 
-  return `You are "בגרות מאסטר" (Bagrut Master), a specialized math tutor for the Israeli High School Matriculation (Bagrut) for 3, 4, and 5 units.
+  return `You are "EasyMat", a specialized math tutor for the Israeli High School Matriculation (Bagrut) for 3, 4, and 5 units.
 
 ${unitContext}
 

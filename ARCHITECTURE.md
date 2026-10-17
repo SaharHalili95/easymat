@@ -1,4 +1,4 @@
-# בגרות מאסטר — Architecture
+# EasyMat — Architecture
 
 ## Stack
 

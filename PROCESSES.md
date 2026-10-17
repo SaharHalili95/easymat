@@ -1,4 +1,4 @@
-# תהליכים ועלויות — Bagrut-Master AI
+# תהליכים ועלויות — EasyMat AI
 
 ---
 

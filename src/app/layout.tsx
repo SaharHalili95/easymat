@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "בגרות מאסטר",
+  title: "EasyMat",
   description: "מורה מתמטיקה AI לבגרות — 3, 4, 5 יחידות",
 };
 

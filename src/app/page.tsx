@@ -87,7 +87,7 @@ export default function Home() {
   return (
     <div className="flex flex-col h-screen max-w-2xl mx-auto shadow-lg">
       <header className="p-4 border-b text-center bg-white">
-        <h1 className="text-xl font-bold text-blue-700">בגרות מאסטר</h1>
+        <h1 className="text-xl font-bold text-blue-700">EasyMat</h1>
         <p className="text-xs text-gray-500 mt-0.5">מורה מתמטיקה לבגרות | 3, 4, 5 יחידות</p>
       </header>
 
