@@ -5,7 +5,7 @@ export async function embedText(text: string): Promise<number[]> {
 
 // Batch embed with rate-limit awareness.
 // Free tier: 3 RPM + 10K TPM. Splits into chunks of BATCH_SIZE with a
-// 22s gap between calls so we stay inside both limits.
+// 30s gap between calls so we stay inside both limits.
 const BATCH_SIZE = 2;
 
 export async function embedBatch(texts: string[]): Promise<number[][]> {

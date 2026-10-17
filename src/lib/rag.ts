@@ -21,12 +21,13 @@ export interface BagrutQuestion {
   score: number;
 }
 
-function mapMatch(match: { id: string; score?: number; metadata?: Record<string, unknown> }): NoteChunk {
+export function mapMatch(match: { id: string; score?: number; metadata?: Record<string, unknown> }): NoteChunk {
   return {
     id: match.id,
     text: (match.metadata?.text as string) ?? '',
     topic: (match.metadata?.topic as string) ?? '',
-    units: (match.metadata?.units as unknown as number[]) ?? [],
+    // Stored as strings so Pinecone's $in filter matches; converted back here.
+    units: ((match.metadata?.units as string[] | undefined) ?? []).map(Number),
     type: (match.metadata?.type as string) ?? undefined,
     year: (match.metadata?.year as string) ?? undefined,
     moed: (match.metadata?.moed as string) ?? undefined,
