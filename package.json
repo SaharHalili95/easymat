@@ -6,14 +6,16 @@
     "dev": "node node_modules/next/dist/bin/next dev",
     "build": "node node_modules/next/dist/bin/next build",
     "start": "node node_modules/next/dist/bin/next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.95.1",
     "@pinecone-database/pinecone": "^7.2.0",
     "gray-matter": "^4.0.3",
-    "katex": "^0.16.45",
-    "next": "16.2.6",
+    "katex": "0.18.11",
+    "next": "16.3.8",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-katex": "^3.1.0",
@@ -27,8 +29,14 @@
     "@types/react-dom": "^19",
     "@types/react-katex": "^3.0.4",
     "eslint": "^9",
-    "eslint-config-next": "16.2.6",
+    "eslint-config-next": "16.3.8",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "4.1.11"
+  },
+  "overrides": {
+    "react-katex": {
+      "katex": "$katex"
+    }
   }
 }
