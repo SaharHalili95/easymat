@@ -69,7 +69,7 @@ export default function Home() {
         assistantText += decoder.decode(value);
         setMessages((prev) => [
           ...prev.slice(0, -1),
-          { id: assistantId, role: 'assistant', content: assistantText },
+          { id: assistantId, role: 'assistant', content: assistantText, bagrutQuestion },
         ]);
       }
     } catch {

@@ -1,7 +1,7 @@
 import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { getAnthropicClient } from '@/lib/claude';
-import { retrieveContext, retrieveBagrutQuestion } from '@/lib/rag';
+import { buildSearchQuery, retrieveContext, retrieveBagrutQuestion } from '@/lib/rag';
 import { buildSystemPrompt } from '@/lib/buildSystemPrompt';
 
 // In-memory rate limiter: 20 requests/minute per IP
@@ -81,9 +81,10 @@ export async function POST(req: NextRequest) {
   const lastMessage = messages[messages.length - 1]?.content ?? '';
   const queryText = typeof lastMessage === 'string' ? lastMessage : lastMessage[0]?.text ?? '';
 
+  const searchQuery = buildSearchQuery(messages);
   const [context, bagrutQuestion] = await Promise.all([
-    retrieveContext(queryText, unitLevel),
-    retrieveBagrutQuestion(queryText, unitLevel),
+    retrieveContext(searchQuery, unitLevel),
+    retrieveBagrutQuestion(searchQuery, unitLevel),
   ]);
   const systemPrompt = buildSystemPrompt(context, unitLevel);
 
