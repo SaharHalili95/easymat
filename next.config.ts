@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // The syllabus is read with fs at request time, so the tracer cannot see it.
+  outputFileTracingIncludes: {
+    '/api/chat': ['./vault/syllabus/**/*'],
+  },
 };
 
 export default nextConfig;

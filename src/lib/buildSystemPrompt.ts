@@ -4,7 +4,7 @@ import { NoteChunk } from './rag';
 
 function loadSyllabus(unitLevel: number): string {
   try {
-    const filePath = path.join(process.cwd(), 'src/data/syllabus', `mikud-2024-${unitLevel}units.md`);
+    const filePath = path.join(process.cwd(), 'vault/syllabus', `mikud-2024-${unitLevel}units.md`);
     const content = fs.readFileSync(filePath, 'utf8');
     // Strip frontmatter
     return content.replace(/^---[\s\S]*?---\n/, '').trim();
