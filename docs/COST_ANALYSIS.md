@@ -1,5 +1,7 @@
 # ניתוח עלויות — EasyMat
 
+> **עדכון (אוקטובר 2026):** Voyage AI הוסר. Pinecone מחשב את ה-embeddings בעצמו (`llama-text-embed-v2`, $0.16 למיליון tokens, 5M tokens לחודש בחינם בתוכנית Starter). סנכרון מלא של הכספת עולה ~480K tokens, ועריכה של פתק אחד עולה כמה אלפי tokens. הסעיפים על Voyage למטה נשארו לתיעוד היסטורי. פירוט עדכני ב-[PROCESSES.md](PROCESSES.md).
+
 ## רשימת תהליכים ועלויות
 
 | # | תהליך | מתי | עלות |
