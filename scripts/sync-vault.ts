@@ -2,18 +2,13 @@ import fs from 'fs';
 import { loadEnv } from './env';
 import { getPineconeIndex } from '../src/lib/pinecone';
 import { VAULT_DIR, buildRecords, isIndexable, readVault } from '../src/lib/vault';
-import { syncVault, type SyncIndex } from '../src/lib/vaultSync';
+import { syncVault, toSyncIndex } from '../src/lib/vaultSync';
 
 loadEnv();
 
 const dryRun = process.argv.includes('--dry-run');
 const watch = process.argv.includes('--watch');
-const ns = getPineconeIndex();
-const index: SyncIndex = {
-  listPaginated: options => ns.listPaginated(options),
-  upsertRecords: records => ns.upsertRecords({ records }),
-  deleteMany: ids => ns.deleteMany(ids),
-};
+const index = toSyncIndex(getPineconeIndex());
 
 async function runOnce() {
   const started = Date.now();

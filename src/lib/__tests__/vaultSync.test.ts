@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { VaultRecord } from '../vault';
-import { planSync, syncVault, withRetry, type SyncIndex } from '../vaultSync';
+import { estimateTokens, makeBatches, planSync, syncVault, toSyncIndex, withRetry, type SyncIndex } from '../vaultSync';
 
-const rec = (id: string): VaultRecord => ({ id, text: `text ${id}`, topic: 't', units: ['5'], source: 'a.md' });
+const rec = (id: string, text = `text ${id}`): VaultRecord => ({ id, text, topic: 't', units: ['5'], source: 'a.md' });
 
 function fakeIndex(existing: string[], pageSize = 2) {
   const index = {
@@ -25,6 +25,22 @@ describe('planSync', () => {
     expect(plan.toUpsert.map((r) => r.id)).toEqual(['a']);
     expect(plan.toDelete).toEqual(['old', 'x.md-chunk-0']);
     expect(plan.unchanged).toBe(2);
+  });
+});
+
+describe('makeBatches', () => {
+  it('caps a batch at 96 records', () => {
+    expect(makeBatches(Array.from({ length: 200 }, (_, i) => rec(`r${i}`))).map((b) => b.length)).toEqual([96, 96, 8]);
+  });
+
+  it('caps a batch by estimated tokens', () => {
+    const big = 'א'.repeat(20_000);
+    expect(estimateTokens(big)).toBe(24_000);
+    expect(makeBatches([rec('a', big), rec('b', big), rec('c', big)]).map((b) => b.length)).toEqual([2, 1]);
+  });
+
+  it('keeps an oversized record in its own batch', () => {
+    expect(makeBatches([rec('a', 'א'.repeat(100_000)), rec('b')]).map((b) => b.length)).toEqual([1, 1]);
   });
 });
 
@@ -67,6 +83,21 @@ describe('syncVault', () => {
   });
 });
 
+describe('syncVault pacing', () => {
+  it('waits out the minute before going over the token budget', async () => {
+    const index = fakeIndex([]);
+    let clock = 0;
+    const sleep = vi.fn(async (ms: number) => { clock += ms; });
+    const big = 'א'.repeat(40_000); // 48k estimated tokens, one record per batch
+    await syncVault(index, Array.from({ length: 6 }, (_, i) => rec(`r${i}`, big)), {
+      sleep,
+      now: () => clock,
+    });
+    expect(index.upsertRecords).toHaveBeenCalledTimes(6);
+    expect(sleep.mock.calls).toEqual([[60_000]]);
+  });
+});
+
 describe('withRetry', () => {
   it('retries rate limits with growing waits', async () => {
     const sleep = vi.fn(async () => {});
@@ -75,7 +106,7 @@ describe('withRetry', () => {
       .mockRejectedValueOnce(new Error('RESOURCE_EXHAUSTED'))
       .mockResolvedValue('ok');
     expect(await withRetry(fn, sleep)).toBe('ok');
-    expect(sleep.mock.calls).toEqual([[5000], [10000]]);
+    expect(sleep.mock.calls).toEqual([[15000], [30000]]);
   });
 
   it('does not retry other errors', async () => {
@@ -88,5 +119,22 @@ describe('withRetry', () => {
     const fn = vi.fn().mockRejectedValue(new Error('429'));
     await expect(withRetry(fn, noSleep)).rejects.toThrow('429');
     expect(fn).toHaveBeenCalledTimes(6);
+  });
+});
+
+describe('toSyncIndex', () => {
+  it('wraps records and ids in the option objects the SDK expects', async () => {
+    const ns = {
+      listPaginated: vi.fn(async () => ({ vectors: [] })),
+      upsertRecords: vi.fn(async () => {}),
+      deleteMany: vi.fn(async () => {}),
+    };
+    const index = toSyncIndex(ns);
+    await index.listPaginated({ limit: 100 });
+    await index.upsertRecords([{ _id: 'a', text: 't' }]);
+    await index.deleteMany(['a', 'b']);
+    expect(ns.listPaginated).toHaveBeenCalledWith({ limit: 100 });
+    expect(ns.upsertRecords).toHaveBeenCalledWith({ records: [{ _id: 'a', text: 't' }] });
+    expect(ns.deleteMany).toHaveBeenCalledWith({ ids: ['a', 'b'] });
   });
 });

@@ -3,7 +3,33 @@ import type { VaultRecord } from './vault';
 // Hosted embedding models accept at most 96 text records per upsert.
 export const UPSERT_BATCH = 96;
 export const DELETE_BATCH = 1000;
+// The Starter plan allows 250k passage tokens per minute; keep headroom.
+export const TOKENS_PER_MINUTE = 200_000;
+export const BATCH_TOKENS = 60_000;
 const MAX_RETRIES = 5;
+
+// Measured ~1.08 tokens per character on this vault (Hebrew + LaTeX).
+export function estimateTokens(text: string): number {
+  return Math.ceil(text.length * 1.2);
+}
+
+export function makeBatches(records: VaultRecord[]): VaultRecord[][] {
+  const batches: VaultRecord[][] = [];
+  let current: VaultRecord[] = [];
+  let tokens = 0;
+  for (const r of records) {
+    const t = estimateTokens(r.text);
+    if (current.length > 0 && (current.length >= UPSERT_BATCH || tokens + t > BATCH_TOKENS)) {
+      batches.push(current);
+      current = [];
+      tokens = 0;
+    }
+    current.push(r);
+    tokens += t;
+  }
+  if (current.length > 0) batches.push(current);
+  return batches;
+}
 
 export interface SyncIndex {
   listPaginated(options: { limit?: number; paginationToken?: string }): Promise<{
@@ -12,6 +38,22 @@ export interface SyncIndex {
   }>;
   upsertRecords(records: Record<string, string | string[]>[]): Promise<void>;
   deleteMany(ids: string[]): Promise<void>;
+}
+
+// SDK 7.x takes option objects; a bare array type-checks for deleteMany but
+// is silently treated as an empty selection.
+export interface PineconeNamespaceLike {
+  listPaginated(options: { limit?: number; paginationToken?: string }): ReturnType<SyncIndex['listPaginated']>;
+  upsertRecords(options: { records: Record<string, string | string[]>[] }): Promise<void>;
+  deleteMany(options: { ids: string[] }): Promise<void>;
+}
+
+export function toSyncIndex(ns: PineconeNamespaceLike): SyncIndex {
+  return {
+    listPaginated: options => ns.listPaginated(options),
+    upsertRecords: records => ns.upsertRecords({ records }),
+    deleteMany: ids => ns.deleteMany({ ids }),
+  };
 }
 
 export interface SyncPlan {
@@ -24,6 +66,7 @@ export interface SyncOptions {
   dryRun?: boolean;
   log?: (msg: string) => void;
   sleep?: (ms: number) => Promise<void>;
+  now?: () => number;
 }
 
 export function planSync(records: VaultRecord[], existingIds: Iterable<string>): SyncPlan {
@@ -59,7 +102,7 @@ export async function withRetry<T>(fn: () => Promise<T>, sleep: (ms: number) => 
       return await fn();
     } catch (err) {
       if (!isRateLimited(err) || attempt >= MAX_RETRIES) throw err;
-      await sleep(5_000 * 2 ** attempt);
+      await sleep(15_000 * 2 ** attempt);
     }
   }
 }
@@ -72,10 +115,23 @@ export async function syncVault(index: SyncIndex, records: VaultRecord[], opts: 
   log(`${plan.toUpsert.length} to upsert, ${plan.toDelete.length} to delete, ${plan.unchanged} unchanged`);
   if (opts.dryRun) return plan;
 
-  for (let i = 0; i < plan.toUpsert.length; i += UPSERT_BATCH) {
-    const batch = plan.toUpsert.slice(i, i + UPSERT_BATCH);
+  const now = opts.now ?? Date.now;
+  let windowStart = now();
+  let windowTokens = 0;
+  let done = 0;
+  for (const batch of makeBatches(plan.toUpsert)) {
+    const tokens = batch.reduce((sum, r) => sum + estimateTokens(r.text), 0);
+    if (windowTokens > 0 && windowTokens + tokens > TOKENS_PER_MINUTE) {
+      const wait = Math.max(0, 60_000 - (now() - windowStart));
+      log(`waiting ${Math.ceil(wait / 1000)}s for the per-minute token limit`);
+      await sleep(wait);
+      windowStart = now();
+      windowTokens = 0;
+    }
+    windowTokens += tokens;
     await withRetry(() => index.upsertRecords(batch.map(({ id, ...fields }) => ({ _id: id, ...fields }) as Record<string, string | string[]>)), sleep);
-    log(`upserted ${Math.min(i + UPSERT_BATCH, plan.toUpsert.length)}/${plan.toUpsert.length}`);
+    done += batch.length;
+    log(`upserted ${done}/${plan.toUpsert.length}`);
   }
   for (let i = 0; i < plan.toDelete.length; i += DELETE_BATCH) {
     const batch = plan.toDelete.slice(i, i + DELETE_BATCH);
