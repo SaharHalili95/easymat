@@ -10,6 +10,7 @@ An AI-powered math tutor for Israeli high school students preparing for the Bagr
 - **LaTeX rendering** via KaTeX for clean formula display
 - **Image upload** for handwritten equations - Claude transcribes to LaTeX and solves
 - **Unit level selector** - adapts tone and curriculum to 3, 4, or 5 units
+- **Practice mode** - a real 2025-2026 Bagrut question by level and chapter, with the official answer on request; no model call
 - **Bilingual** Hebrew/English with automatic RTL/LTR switching
 
 ## Tech Stack
@@ -55,12 +56,13 @@ npm run sync           # uploads every chunk (~2 minutes the first time)
 Open the `vault/` folder as a vault in Obsidian (*Open folder as vault*). It holds:
 
 - `topics/` - formulas, worked examples and solved Bagrut questions per topic
-- `exams/` - past papers as extracted from the Ministry of Education PDFs (all math questionnaires for 2025-2026; 5 units plus mislabeled 3/4-unit files for 2020-2024)
-- `solutions/` - official answer keys for 2025-2026, linked from each exam; not searched yet
+- `questions/` - one note per 2025-2026 question with its official answer; these are what search and practice mode use
+- `exams/` - whole past papers (2025-2026 kept for reading only; 2020-2024 5-unit papers searchable; the 2020-2024 381/481 files are not math and are `searchable: false`)
+- `solutions/` - official answer keys for 2025-2026, linked from each exam
 - `syllabus/` - the yearly focus (מיקוד) per unit level, loaded straight into the prompt
 - `reference/` - official links, not searched
 
-A note is searchable when its frontmatter has a `topic` and `units`:
+A note is searchable when its frontmatter has a `topic` and `units` (add `searchable: false` to keep a note out of search):
 
 ```yaml
 ---
@@ -72,6 +74,17 @@ type: bagrut        # optional; past papers also set year, moed and shalon
 ```
 
 After editing, run `npm run sync`, or leave `npm run sync -- --watch` running to sync a few seconds after every save. A sync only uploads chunks whose text or frontmatter changed and deletes chunks that no longer exist, so editing one note takes a few seconds. `npm run sync -- --dry-run` shows what would change.
+
+### Adding new Bagrut papers
+
+Download the paper and answer-key PDFs from meyda.education.gov.il, name them `<year>-<month>-<code>-q.pdf` and `-s.pdf` (e.g. `2027-6-35581-q.pdf`), put them in one folder, then:
+
+```bash
+npm run import-exams -- <folder>
+npm run sync
+```
+
+The importer (needs `pdftotext`: `brew install poppler`) writes one note per question with its answer, plus the whole paper and the answer key. It keeps notes you already edited unless you pass `--force`. Answer keys that hold several versions of a paper are read for version א only, which is the published one.
 
 The old `bagrut-notes` index (Voyage, 512 dims) is no longer used and can be deleted in the Pinecone console.
 

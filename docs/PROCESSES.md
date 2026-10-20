@@ -6,10 +6,10 @@
 **מתי:** פעם אחת, או אחרי יצירת index חדש
 
 ```
-vault/**/*.md (227 קבצים, 142 עם topic + units)
+vault/**/*.md (719 קבצים, 538 עם topic + units)
     ↓
 chunkText() — פיצול לפי ---, פסקאות ושורות + כיבוד LaTeX
-    ↓ 724 chunks, חציון ~1,500 תווים (~1,650 tokens)
+    ↓ 630 chunks (שאלה אחת או קטע של עד 1,500 תווים)
 Pinecone upsertRecords — Pinecone מחשב embeddings בעצמו (llama-text-embed-v2)
     ↓ ~1,100,000 tokens, עד 200K לדקה
 ```
@@ -17,7 +17,7 @@ Pinecone upsertRecords — Pinecone מחשב embeddings בעצמו (llama-text-e
 | שירות | כמות | עלות |
 |-------|------|------|
 | Pinecone embedding | ~1.1M tokens | **$0** (Starter: 5M לחודש למודל, כלומר ~4 סנכרונים מלאים) |
-| Pinecone write | 724 records | **$0** (Starter: 2GB) |
+| Pinecone write | 630 records | **$0** (Starter: 2GB) |
 | זמן ריצה | ~5 דקות | — |
 | **סה"כ** | | **$0** |
 

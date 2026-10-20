@@ -54,15 +54,22 @@ IDs are content-addressed, so the diff needs no state: an edited chunk gets a ne
 src/
 ├── app/
 │   ├── layout.tsx              root layout
-│   ├── page.tsx                chat UI (client component)
+│   ├── page.tsx                chat + practice tabs (client component)
 │   └── api/
-│       └── chat/route.ts       LLM endpoint + RAG + rate limiting
+│       ├── chat/route.ts       LLM endpoint + RAG + rate limiting
+│       ├── practice/route.ts   random question by level/chapter (no model call)
+│       └── practice/answer/    official answer for one question
 ├── components/
 │   ├── ChatMessage.tsx         markdown + LaTeX rendering
 │   ├── ChatInput.tsx           text + image input
-│   └── UnitSelector.tsx        3/4/5 unit level picker
+│   ├── UnitSelector.tsx        3/4/5 unit level picker
+│   └── PracticePanel.tsx       practice mode UI
 ├── lib/
 │   ├── claude.ts               Anthropic client singleton
+│   ├── models.ts               model routing, effort, refusal/error messages
+│   ├── practice.ts             load question notes, pick one, find its answer
+│   ├── examImport.ts           split pdftotext -layout papers and answer keys
+│   ├── examUrl.ts              link to the original PDF
 │   ├── pinecone.ts             Pinecone client, index namespace, embed model
 │   ├── rag.ts                  search query + text search in Pinecone
 │   ├── chunk.ts                note → chunks
@@ -71,11 +78,13 @@ src/
 │   └── buildSystemPrompt.ts   system prompt builder
 scripts/
 ├── create-index.ts             create the integrated index
+├── import-exams.ts             npm run import-exams -- <pdf folder> [--force]
 └── sync-vault.ts               npm run sync [--dry-run] [--watch]
 vault/                          Obsidian vault
 ├── topics/                     26 notes: formulas, examples, solved questions
-├── exams/                      116 past papers (text extracted from PDFs with pdftotext)
-├── solutions/                  78 official answer keys, 2025-2026 (not indexed)
+├── questions/                  492 question notes with answers, 2025-2026 (indexed)
+├── exams/                      116 whole past papers (2025-2026 and the 381/481 files not indexed)
+├── solutions/                  78 official answer keys, 2025-2026 (not indexed; answers are in the question notes)
 ├── syllabus/                   6 מיקוד files, read directly by the prompt builder
 └── reference/                  official links (not indexed)
 ```
@@ -91,7 +100,7 @@ tags: [calculus, derivatives]
 ---
 ```
 
-Chunking: primary split on `---`, then paragraphs, then lines (exam text extracted from PDFs has no blank lines). Max 1500 chars, min 200. Heading prepended to sub-chunks. Never splits inside a `$$` block unless it runs past 3000 chars. The vault produces 535 indexed chunks, median ~1500 chars (~1,650 tokens, under the model's 2048).
+Chunking: primary split on `---`, then paragraphs, then lines (exam text extracted from PDFs has no blank lines). Max 1500 chars, min 200. Heading prepended to sub-chunks. Never splits inside a `$$` block unless it runs past 3000 chars. The vault produces 630 indexed chunks, median ~1500 chars (~1,650 tokens, under the model's 2048).
 
 ## Pinecone Record Schema
 
