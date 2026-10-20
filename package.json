@@ -10,7 +10,8 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "create-index": "tsx scripts/create-index.ts",
-    "sync": "tsx scripts/sync-vault.ts"
+    "sync": "tsx scripts/sync-vault.ts",
+    "import-exams": "tsx scripts/import-exams.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.95.1",

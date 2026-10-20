@@ -1,4 +1,5 @@
 ---
+searchable: false  # indexed per question in vault/questions
 topic: bagrut-exam
 units: [5]
 tags: [bagrut, exam-2025, summer-a, shalon-35572, official, curriculum-new]
