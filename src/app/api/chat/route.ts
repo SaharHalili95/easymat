@@ -101,7 +101,7 @@ export async function POST(req: NextRequest) {
     !!imageBase64 ||
     /הוכח|הוכיח|הראה|prove|show that/i.test(queryText) ||
     /מספרים מרוכבים|וקטור|complex number|vector/i.test(queryText) ||
-    context.some(c => c.shalon === '582');
+    context.some(c => c.shalon?.endsWith('582'));
 
   const model = needsSonnet ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001';
 

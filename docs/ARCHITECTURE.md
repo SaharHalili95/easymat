@@ -74,7 +74,8 @@ scripts/
 └── sync-vault.ts               npm run sync [--dry-run] [--watch]
 vault/                          Obsidian vault
 ├── topics/                     26 notes: formulas, examples, solved questions
-├── exams/                      38 past papers (text extracted from PDFs)
+├── exams/                      116 past papers (text extracted from PDFs with pdftotext)
+├── solutions/                  78 official answer keys, 2025-2026 (not indexed)
 ├── syllabus/                   6 מיקוד files, read directly by the prompt builder
 └── reference/                  official links (not indexed)
 ```
@@ -90,7 +91,7 @@ tags: [calculus, derivatives]
 ---
 ```
 
-Chunking: primary split on `---`, then paragraphs, then lines (exam text extracted from PDFs has no blank lines). Max 1500 chars, min 200. Heading prepended to sub-chunks. Never splits inside a `$$` block unless it runs past 3000 chars. The vault produces 317 chunks, median ~1500 chars (~1,650 tokens, under the model's 2048).
+Chunking: primary split on `---`, then paragraphs, then lines (exam text extracted from PDFs has no blank lines). Max 1500 chars, min 200. Heading prepended to sub-chunks. Never splits inside a `$$` block unless it runs past 3000 chars. The vault produces 724 chunks, median ~1500 chars (~1,650 tokens, under the model's 2048).
 
 ## Pinecone Record Schema
 
@@ -127,4 +128,5 @@ Filter at query time: `{ units: { $in: [String(unitLevel)] } }`
 
 ## Known data issues
 
-- The `381` and `481` past papers in `vault/exams/` are not math exams: the 481 files are the English Bagrut (code 016481) and the 381 files are mostly Arabic. The links in `vault/reference/bagrut-links.md` use the same wrong codes. Until they are replaced, 3- and 4-unit searches can surface them.
+- 2025-2026 covers all 13 math questionnaires (35182, 35371/2, 35381/2, 35471/2, 35481/2, 35571/2, 35581/2) with full 5-digit `shalon` codes. Text comes from `pdftotext`, so fractions and formulas are flattened.
+- The 2020-2024 `381` and `481` past papers in `vault/exams/` are not math exams: the 481 files are the English Bagrut (code 016481) and the 381 files are mostly Arabic. The links in `vault/reference/bagrut-links.md` use the same wrong codes. Until they are replaced, 3- and 4-unit searches can surface them.

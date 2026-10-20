@@ -3,6 +3,7 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { InlineMath, BlockMath } from 'react-katex';
 import 'katex/dist/katex.min.css';
+import { examPdfUrl } from '@/lib/examUrl';
 
 interface BagrutQuestion {
   text: string;
@@ -42,16 +43,6 @@ function renderSegment(text: string) {
     }
     return <span key={i}>{part}</span>;
   });
-}
-
-function buildMoedUrl(q: BagrutQuestion): string {
-  const month = q.moed === 'א' ? 6 : 8;
-  const codeMap: Record<string, string> = {
-    '581': '35581', '582': '35582',
-    '481': '16481', '381': '20381',
-  };
-  const code = codeMap[q.shalon] ?? q.shalon;
-  return `https://meyda.education.gov.il/sheeloney_bagrut/${q.year}/${month}/HEB/${code}.pdf`;
 }
 
 export function ChatMessage({ role, content, bagrutQuestion }: Props) {
@@ -113,7 +104,7 @@ export function ChatMessage({ role, content, bagrutQuestion }: Props) {
                     בגרות {bagrutQuestion.year} מועד {bagrutQuestion.moed} — שאלון {bagrutQuestion.shalon}
                   </span>
                   <a
-                    href={buildMoedUrl(bagrutQuestion)}
+                    href={examPdfUrl(bagrutQuestion)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-gray-400 hover:text-gray-600 text-[10px] underline"

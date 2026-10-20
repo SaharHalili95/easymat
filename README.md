@@ -55,7 +55,8 @@ npm run sync           # uploads every chunk (~2 minutes the first time)
 Open the `vault/` folder as a vault in Obsidian (*Open folder as vault*). It holds:
 
 - `topics/` - formulas, worked examples and solved Bagrut questions per topic
-- `exams/` - past papers as extracted from the Ministry of Education PDFs
+- `exams/` - past papers as extracted from the Ministry of Education PDFs (all math questionnaires for 2025-2026; 5 units plus mislabeled 3/4-unit files for 2020-2024)
+- `solutions/` - official answer keys for 2025-2026, linked from each exam; not searched yet
 - `syllabus/` - the yearly focus (מיקוד) per unit level, loaded straight into the prompt
 - `reference/` - official links, not searched
 
