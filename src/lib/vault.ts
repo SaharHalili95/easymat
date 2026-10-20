@@ -45,10 +45,11 @@ export function readVault(dir: string = VAULT_DIR): VaultNote[] {
 }
 
 // Only notes tagged with a topic and unit levels are searchable; the syllabus
-// and reference pages are read directly or not at all.
+// and reference pages are read directly or not at all. `searchable: false`
+// keeps a note in the vault but out of the index.
 export function isIndexable(note: VaultNote): boolean {
-  const { topic, units } = note.frontmatter;
-  return typeof topic === 'string' && Array.isArray(units) && units.length > 0;
+  const { topic, units, searchable } = note.frontmatter;
+  return typeof topic === 'string' && Array.isArray(units) && units.length > 0 && searchable !== false;
 }
 
 // IDs are content-addressed: editing a chunk produces a new ID and orphans the

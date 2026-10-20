@@ -42,6 +42,11 @@ describe('isIndexable', () => {
     expect(isIndexable(note({ frontmatter: { unit: 5, type: 'syllabus' } }))).toBe(false);
     expect(isIndexable(note({ frontmatter: { topic: 'x', units: [] } }))).toBe(false);
   });
+
+  it('respects searchable: false', () => {
+    expect(isIndexable(note({ frontmatter: { topic: 'x', units: [3], searchable: false } }))).toBe(false);
+    expect(isIndexable(note({ frontmatter: { topic: 'x', units: [3], searchable: true } }))).toBe(true);
+  });
 });
 
 describe('buildRecords', () => {

@@ -1,4 +1,5 @@
 ---
+searchable: false  # not a math exam: the source PDF is the English (016481) or Arabic (20381) paper
 topic: bagrut-exam
 units: [4]
 tags: [bagrut, exam-2024, summer-a, shalon-481, official]
