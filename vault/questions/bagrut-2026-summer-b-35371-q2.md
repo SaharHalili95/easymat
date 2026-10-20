@@ -42,17 +42,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2026/8/HEB/35371.pdf
 ג. 15
 16
 ד. שווה
-א. 1
-16
-ב. 3
-8
-ג. 15
-16
-ד. שווה
-א. 1
-16
-ב. 3
-8
-ג. 15
-16
-ד. שווה

@@ -42,11 +42,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2026/8/HEB/35472.pdf
 ב. 400
 ג. d = 16
 ד. כן
-א. q = 1.5
-ב. 320
-ג. d = 30
-ד. כן
-א. q = 1.5
-ב. 480
-ג. d = 20
-ד. כן

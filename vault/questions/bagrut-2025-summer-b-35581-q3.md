@@ -41,4 +41,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/8/HEB/35581.pdf
 81
 ד. 1, 074
 1, 417
-"ה ,מועד ב2025 ,

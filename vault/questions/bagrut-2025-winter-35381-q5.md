@@ -45,19 +45,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/1/HEB/35381.pdf
 3
 ד. 7
 36
-א. 2
-3
-ב. 1
-36
-ג. 1
-3
-ד. 7
-36
-א. 2
-3
-ב. 1
-36
-ג. 1
-3
-ד. 7
-36

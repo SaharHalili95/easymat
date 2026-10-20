@@ -49,4 +49,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/1/HEB/35372.pdf
 0 1 0
 ד. .1לא נכון
 .2נכון
-,35372חורף תשפ"ה2025 , פתרון בחינת הבגרות במתמטיקה ,מס'

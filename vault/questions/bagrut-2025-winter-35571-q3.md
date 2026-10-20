@@ -39,12 +39,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/1/HEB/35571.pdf
 151
 ב. 0.001701
 ג. לא
-א. 35
-151
-0.001701
-ב.
-ג. לא
-א. 35
-151
-ב. 0.001701
-ג. לא

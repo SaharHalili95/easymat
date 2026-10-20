@@ -37,11 +37,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/6/HEB/35471.pdf
 ב. 40%
 ג. 0.75
 ד. לא
-א. 0.45
-ב. 40%
-ג. 0.75
-ד. לא
-א. 0.45
-ב. 40%
-ג. 0.75
-ד. לא

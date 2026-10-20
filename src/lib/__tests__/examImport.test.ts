@@ -82,6 +82,20 @@ describe('parseAnswerKey', () => {
   it('drops footers', () => {
     expect([...answers.values()].join('\n')).not.toMatch(/-2-|זכות/);
   });
+
+  it('reads only version א when a key holds several versions', () => {
+    const versions = [
+      "פתרון בחינת הבגרות במתמטיקה ,מס' 35572 ,גרסה א",
+      key,
+      "פתרון בחינת הבגרות במתמטיקה ,מס' 35572 ,גרסה ב",
+      header,
+      '                                                                                  .1',
+      '                                                            פי 7                א.',
+    ].join('\n');
+    const parsed = parseAnswerKey(versions);
+    expect(parsed.get(1)).toBe('א. פי 3\nב. 10.5ק"מ');
+    expect([...parsed.values()].join('\n')).not.toMatch(/פי 7|פתרון בחינת/);
+  });
 });
 
 describe('names and notes', () => {

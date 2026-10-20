@@ -112,6 +112,11 @@ export function parseAnswerKey(layout: string): Map<number, string> {
   };
 
   for (const line of lines(layout)) {
+    // Some keys hold versions א, ב and ג of the paper back to back; the
+    // published paper is version א, so stop where another version starts.
+    const version = line.match(/גרסה\s*([א-ת])/);
+    if (version && version[1] !== 'א') break;
+    if (/פתרון בחינת הבגרות/.test(line)) continue;
     if (NOISE.some(re => re.test(line.trim())) || /שמורה למדינת ישראל|ברשות משרד החינוך/.test(line)) continue;
     const headers = line.split('מספר השאלה').length - 1;
     if (headers > 0) {

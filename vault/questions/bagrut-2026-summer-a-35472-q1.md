@@ -40,11 +40,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2026/6/HEB/35472.pdf
 ב. 1,480ק"ג
 ג. d=7
 ד. 80ק"ג
-א. 47ק"ג
-ב. 1,020ק"ג
-ג. d=5
-ד. 60ק"ג
-א. 61ק"ג
-ב. 1,400ק"ג
-ג. d=4
-ד. 70ק"ג

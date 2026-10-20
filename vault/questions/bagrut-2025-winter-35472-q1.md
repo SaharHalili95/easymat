@@ -35,11 +35,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/1/HEB/35472.pdf
 ב. a1 = 6
 ג. 16,104
 ד. 8
-א. q =! 3
-ב. a1 = 5
-ג. 13,420
-ד. 10
-א. q =! 3
-ב. a1 = 4
-ג. 10,736
-ד. 11

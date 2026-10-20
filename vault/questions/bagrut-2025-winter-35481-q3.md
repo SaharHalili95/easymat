@@ -41,13 +41,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/1/HEB/35481.pdf
 3
 ג. 184
 ד. 7
-א. 37.5%
-ב. 1
-3
-ג. 184
-ד. 9
-א. 37.5%
-ב. 1
-3
-ג. 184
-ד. 8

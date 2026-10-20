@@ -64,17 +64,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2026/8/HEB/35371.pdf
 ג.
 ד. x = 12
 ה. לא
-א)1( . 20
-()2 7.5
-ב. 16
-8
-ג.
-ד. x = 11
-ה. לא
-א)1( . 20
-()2 7.75
-ב. 16
-4
-ג.
-ד. x = 14
-ה. לא

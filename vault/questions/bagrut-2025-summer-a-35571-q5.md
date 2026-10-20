@@ -44,17 +44,3 @@ r
 ב. a = 30 o
 ג. r=5
 ד. BE = 10 3 - 14.4
-r
-א)1( . )CO = sin (a
-()2 )r:cos (a
-)AC = sin (a):cos (2a
-ב. a = 30 o
-ג. r=3
-ד. BE = 6 3 - 8
-r
-א)1( . )CO = sin (a
-()2 )r:cos (a
-)AC = sin (a):cos (2a
-ב. a = 30 o
-ג. r=4
-ד. BE = 8 3 - 10

@@ -41,13 +41,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/8/HEB/35471.pdf
 ג. 33.4%
 ד. 6,500
 ה. 6
-א. 80
-ב. כן
-ג. 33.4%
-ד. 7,000
-ה. 9
-א. 78
-ב. כן
-ג. 33.4%
-ד. 7,500
-ה. 7

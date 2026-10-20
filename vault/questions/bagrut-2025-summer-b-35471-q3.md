@@ -41,19 +41,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/8/HEB/35471.pdf
 ()2 10
 47
 ג. x=8
-43
-א.
-90
-ב)1( . 19
-30
-()2 14
-57
-ג. x=7
-38
-א.
-75
-ב)1( . 18
-25
-()2 8
-27
-ג. x=8

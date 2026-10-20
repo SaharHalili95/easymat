@@ -38,11 +38,3 @@ B E C
 ME = 3k sin a
 ב. a . 70.104 o
 ג. k .10.328
-א. DE = k sin a
-ME = 3k sin a
-ב. a . 70.104 o
-ג. k .11.396
-א. DE = k sin a
-ME = 3k sin a
-ב. a . 70.104 o
-ג. k . 5.342

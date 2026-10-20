@@ -35,11 +35,3 @@ source_url: https://meyda.education.gov.il/sheeloney_bagrut/2026/1/HEB/35472.pdf
 ב. 381,000
 ג. 24
 ד. 15,875
-א. 70
-ב. 400,050
-ג. 30
-ד. 13,335
-א. 50
-ב. 381,000
-ג. 24
-ד. 15,875
