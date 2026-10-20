@@ -1,8 +1,9 @@
 import { NextRequest } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { getAnthropicClient } from '@/lib/claude';
-import { retrieveContext, retrieveBagrutQuestion } from '@/lib/rag';
+import { buildSearchQuery, retrieveContext, retrieveBagrutQuestion } from '@/lib/rag';
 import { buildSystemPrompt } from '@/lib/buildSystemPrompt';
+import { MAX_TOKENS, REFUSAL_MESSAGE, STREAM_ERROR_MESSAGE, effortFor, pickModel } from '@/lib/models';
 
 // In-memory rate limiter: 20 requests/minute per IP
 // Replace with Vercel's @vercel/ratelimit before public deployment
@@ -81,9 +82,10 @@ export async function POST(req: NextRequest) {
   const lastMessage = messages[messages.length - 1]?.content ?? '';
   const queryText = typeof lastMessage === 'string' ? lastMessage : lastMessage[0]?.text ?? '';
 
+  const searchQuery = buildSearchQuery(messages);
   const [context, bagrutQuestion] = await Promise.all([
-    retrieveContext(queryText, unitLevel),
-    retrieveBagrutQuestion(queryText, unitLevel),
+    retrieveContext(searchQuery, unitLevel),
+    retrieveBagrutQuestion(searchQuery, unitLevel),
   ]);
   const systemPrompt = buildSystemPrompt(context, unitLevel);
 
@@ -96,13 +98,7 @@ export async function POST(req: NextRequest) {
 
   const client = getAnthropicClient();
 
-  const needsSonnet =
-    !!imageBase64 ||
-    /הוכח|הוכיח|הראה|prove|show that/i.test(queryText) ||
-    /מספרים מרוכבים|וקטור|complex number|vector/i.test(queryText) ||
-    context.some(c => c.shalon === '582');
-
-  const model = needsSonnet ? 'claude-sonnet-4-6' : 'claude-haiku-4-5-20251001';
+  const model = pickModel(queryText, !!imageBase64, context);
 
   const MAX_HISTORY_CHARS = 40_000;
   const history = trimHistory(
@@ -112,7 +108,8 @@ export async function POST(req: NextRequest) {
 
   const stream = await client.messages.stream({
     model,
-    max_tokens: 2048,
+    max_tokens: MAX_TOKENS,
+    output_config: { effort: effortFor(model) },
     system: [
       {
         type: 'text',
@@ -129,10 +126,19 @@ export async function POST(req: NextRequest) {
   const encoder = new TextEncoder();
   const readable = new ReadableStream({
     async start(controller) {
-      for await (const chunk of stream) {
-        if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
-          controller.enqueue(encoder.encode(chunk.delta.text));
+      let sentText = false;
+      try {
+        for await (const chunk of stream) {
+          if (chunk.type === 'content_block_delta' && chunk.delta.type === 'text_delta') {
+            controller.enqueue(encoder.encode(chunk.delta.text));
+            sentText = true;
+          } else if (chunk.type === 'message_delta' && (chunk.delta.stop_reason as string) === 'refusal' && !sentText) {
+            controller.enqueue(encoder.encode(REFUSAL_MESSAGE));
+          }
         }
+      } catch (err) {
+        console.error('chat stream failed', err);
+        controller.enqueue(encoder.encode(sentText ? STREAM_ERROR_MESSAGE : STREAM_ERROR_MESSAGE.trim()));
       }
       controller.close();
     },
