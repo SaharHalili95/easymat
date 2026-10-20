@@ -5,7 +5,7 @@
 | Layer | Technology |
 |-------|-----------|
 | Frontend | Next.js 16.2.6 App Router, React 19, Tailwind CSS 4 |
-| LLM | Anthropic claude-sonnet-4-6 (streaming + prompt caching) |
+| LLM | Anthropic `claude-haiku-5-5` at effort `low` by default; `claude-sonnet-5-5` at `medium` for images, proofs, vectors, complex numbers and 582 context (streaming + prompt caching, `src/lib/models.ts`) |
 | Vector DB | Pinecone serverless (index: easymat-vault, AWS us-east-1) |
 | Embeddings | Pinecone integrated inference, `llama-text-embed-v2` (1024 dims, 2048 tokens, multilingual incl. Hebrew) |
 | Content | Obsidian vault in `vault/` |
@@ -91,7 +91,7 @@ tags: [calculus, derivatives]
 ---
 ```
 
-Chunking: primary split on `---`, then paragraphs, then lines (exam text extracted from PDFs has no blank lines). Max 1500 chars, min 200. Heading prepended to sub-chunks. Never splits inside a `$$` block unless it runs past 3000 chars. The vault produces 724 chunks, median ~1500 chars (~1,650 tokens, under the model's 2048).
+Chunking: primary split on `---`, then paragraphs, then lines (exam text extracted from PDFs has no blank lines). Max 1500 chars, min 200. Heading prepended to sub-chunks. Never splits inside a `$$` block unless it runs past 3000 chars. The vault produces 535 indexed chunks, median ~1500 chars (~1,650 tokens, under the model's 2048).
 
 ## Pinecone Record Schema
 
@@ -129,4 +129,4 @@ Filter at query time: `{ units: { $in: [String(unitLevel)] } }`
 ## Known data issues
 
 - 2025-2026 covers all 13 math questionnaires (35182, 35371/2, 35381/2, 35471/2, 35481/2, 35571/2, 35581/2) with full 5-digit `shalon` codes. Text comes from `pdftotext`, so fractions and formulas are flattened.
-- The 2020-2024 `381` and `481` past papers in `vault/exams/` are not math exams: the 481 files are the English Bagrut (code 016481) and the 381 files are mostly Arabic. The links in `vault/reference/bagrut-links.md` use the same wrong codes. Until they are replaced, 3- and 4-unit searches can surface them.
+- The 2020-2024 `381` and `481` past papers in `vault/exams/` are not math exams: the 481 files are the English Bagrut (code 016481) and the 381 files are mostly Arabic. The links in `vault/reference/bagrut-links.md` use the same wrong codes. They are kept in the vault with `searchable: false`, so they are not indexed.

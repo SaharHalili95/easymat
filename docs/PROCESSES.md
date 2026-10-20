@@ -35,7 +35,7 @@ Pinecone searchRecords × 2 — חיפוש context + שאלת בגרות (Pineco
     ↓ topK=5 + topK=1
 buildSystemPrompt — הרכבת prompt
     ↓ system + syllabus + context
-Claude claude-sonnet-4-6 — stream תשובה
+Claude — stream תשובה (Haiku 5.5 ברירת מחדל, Sonnet 5.5 לתמונות, הוכחות ווקטורים)
     ↓
 תלמיד מקבל תשובה + לחצן "שאלה מבגרות אמיתית"
 ```
