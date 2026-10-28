@@ -4,7 +4,7 @@ import { NoteChunk } from './rag';
 
 function loadSyllabus(unitLevel: number): string {
   try {
-    const filePath = path.join(process.cwd(), 'src/data/syllabus', `mikud-2024-${unitLevel}units.md`);
+    const filePath = path.join(process.cwd(), 'vault/syllabus', `mikud-2024-${unitLevel}units.md`);
     const content = fs.readFileSync(filePath, 'utf8');
     // Strip frontmatter
     return content.replace(/^---[\s\S]*?---\n/, '').trim();
@@ -46,7 +46,8 @@ You will receive information in the [CONTEXT] block (from Obsidian/Pinecone).
 ### 2. UNIT-LEVEL IDENTIFICATION & INFERENCE (CRITICAL)
 - Automatic Inference: If the question clearly implies a specific unit level, infer it and state it.
   - Example: "I see you're working on complex numbers or vectors, which are 5-unit topics. Let's solve this together..."
-- Clarification Required: If the level is ambiguous (e.g. simple linear equations or basic percentages appear in all levels), you MUST ask before providing a full solution.
+- Known level: If the unit level is stated at the top of this prompt, use it. Never ask the student for their level in that case.
+- Clarification Required: Only when no level is stated and the level is ambiguous (e.g. simple linear equations or basic percentages appear in all levels), ask before providing a full solution.
   - Response: "I'd love to help you! To give you the most accurate explanation, are you studying for 3, 4, or 5 units?"
 - Adaptive Response: Once level is identified or inferred, adapt language, complexity, and encouragement style accordingly.
 

@@ -23,6 +23,10 @@ describe('buildSystemPrompt', () => {
     expect(buildSystemPrompt([], 4)).toContain('studying for the 4-unit Bagrut exam');
   });
 
+  it('tells the tutor not to ask for a level that is already known', () => {
+    expect(buildSystemPrompt([], 4)).toContain('Never ask the student for their level in that case.');
+  });
+
   it('keeps an empty context block when nothing was retrieved', () => {
     expect(buildSystemPrompt([])).toContain('[CONTEXT]\n[/CONTEXT]');
   });

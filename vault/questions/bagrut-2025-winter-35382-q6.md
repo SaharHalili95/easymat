@@ -1,0 +1,38 @@
+---
+topic: bagrut-question
+units: [3]
+tags: [bagrut, exam-2025, winter, shalon-35382, official, question]
+type: bagrut
+year: 2025
+moed: חורף
+session: winter
+shalon: 35382
+question: 6
+exam: "[[bagrut-2025-winter-35382]]"
+source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/1/HEB/35382.pdf
+---
+
+# בגרות חורף 2025 — שאלון 35382, שאלה 6
+
+במלבן ABCDאורך הצלע BCגדול פי 2מאורך הצלע . DC
+F E
+על המלבן בנו ריבוע DEFGכך שהקודקוד Gנמצא על הצלע ( ADראו סרטוט).
+נתון. CE = 21 :
+נסמן ב־ xאת אורך הצלע . DC
+G ( )1הביעו באמצעות xאת אורך הצלע BCואת אורך הצלע . DE א.
+A _D
+b
+b ( )2הביעו באמצעות xאת שטח הריבוע . DEFG
+`x
+b
+b
+מצאו את הערך של xשבעבורו סכום השטחים של הריבוע ושל המלבן הוא מינימלי. ב.
+B מצאו את סכום השטחים של הריבוע ושל המלבן בעבור הערך של xשמצאתם בסעיף בC a . ג.
+
+## תשובה רשמית (תשובות סופיות בלבד)
+
+א)1( . BC = 2x
+DE = 21 - x
+()2 (21 - x) 2
+ב. x=7
+ג. 294

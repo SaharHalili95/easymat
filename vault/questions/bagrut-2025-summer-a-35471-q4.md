@@ -1,0 +1,44 @@
+---
+topic: bagrut-question
+units: [4]
+tags: [bagrut, exam-2025, summer-a, shalon-35471, official, question]
+type: bagrut
+year: 2025
+moed: א
+session: summer-a
+shalon: 35471
+question: 4
+chapter: "גאומטרייה"
+exam: "[[bagrut-2025-summer-a-35471]]"
+source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/6/HEB/35471.pdf
+---
+
+# בגרות קיץ מועד א׳ 2025 — שאלון 35471, שאלה 4
+
+y בסרטוט שלפניכם משולש ישר זווית . )BACB = 90o ( ABC
+C הקודקוד Bנמצא על ציר ה־ . y
+נתון כי שיעורי הקודקוד Aהם ), (- 16 , 0
+B 2
+ומשוואת הצלע CBהיא . y = - 5 x + 11
+E מצאו את משוואת הצלע . AC א.
+מצאו את שיעורי הקודקוד . C ב.
+
+x
+BEהוא תיכון לצלע . AC
+A
+( )1מצאו את אורך הקטע . EC ג.
+( )2מצאו את גודל הזווית . CEB
+
+הנקודה Kנמצאת על הקטע . EB
+נתון :שטח המשולש AEKהוא . 18
+מצאו את אורך הקטע . EK ד.
+
+## תשובה רשמית (תשובות סופיות בלבד)
+
+א. y = 2.5x + 40
+ב. )C (- 10 , 15
+ג)1( . 1.5 29 . 8.078
+()2 53.13 o
+ד. 30
+. 5.571
+29

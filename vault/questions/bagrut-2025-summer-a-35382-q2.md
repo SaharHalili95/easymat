@@ -1,0 +1,42 @@
+---
+topic: bagrut-question
+units: [3]
+tags: [bagrut, exam-2025, summer-a, shalon-35382, official, question]
+type: bagrut
+year: 2025
+moed: א
+session: summer-a
+shalon: 35382
+question: 2
+exam: "[[bagrut-2025-summer-a-35382]]"
+source_url: https://meyda.education.gov.il/sheeloney_bagrut/2025/6/HEB/35382.pdf
+---
+
+# בגרות קיץ מועד א׳ 2025 — שאלון 35382, שאלה 2
+
+y במשולש ישר זווית , (BBAC = 90o) ABC
+
+C B הקודקוד Aנמצא על ציר ה־ . x
+הנקודה Eהיא אמצע הצלע ( ABראו סרטוט).
+נתון. E (4 , 9) , A (- 2 , 0) :
+E
+מצאו את שיעורי הקודקוד . B א.
+D ( )1מצאו את שיפוע הצלע . AB ב.
+( )2מצאו את משוואת הצלע . AC
+A x
+הצלע BCמקבילה לציר ה־ . x
+מצאו את שיעורי הקודקוד . C ג.
+
+נתון. D (10 , 5) :
+הראו כי המשולש ADBהוא שווה שוקיים. ד.
+חשבו את היקף המרובע . ADBC ה.
+
+## תשובה רשמית (תשובות סופיות בלבד)
+
+א. )B (10 , 18
+ב)1( . 1.5
+()2 4 2
+y =- 3 x - 3
+ג. )C (- 29 , 18
+ד. להראות
+ה. 65 + 9 13 . 97.45
