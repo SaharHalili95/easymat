@@ -133,6 +133,10 @@ Planning notes written while building the project (mostly in Hebrew):
 - [Model capabilities and limits](docs/HAIKU_CAPABILITIES.md)
 - [Original execution plan](docs/PROJECT_PLAN.md)
 
+## License
+
+The source code is under the MIT License. The Bagrut material in `vault/` is not, see [NOTICE.md](NOTICE.md).
+
 ## GitHub
 
 [github.com/SaharHalili95/easymat](https://github.com/SaharHalili95/easymat)
